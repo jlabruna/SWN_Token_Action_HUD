@@ -2,8 +2,8 @@
  * Module constants
  */
 export const MODULE = {
-    ID: 'token-action-hud-swnr',
-    NAME: 'Token Action HUD - SWNR'
+    ID: 'token-action-hud-swnr-v14',
+    NAME: 'Token Action HUD - SWNR v14'
 }
 
 /**
@@ -16,7 +16,7 @@ export const CORE_MODULE = {
 /**
  * Minimum TAH Core version required by this module
  */
-export const REQUIRED_CORE_MODULE_VERSION = '2.0'
+export const REQUIRED_CORE_MODULE_VERSION = '2.1'
 
 /**
  * Action types — values are i18n keys
