@@ -1,17 +1,21 @@
 {
-  "id": "token-action-hud-swnr",
-  "title": "Token Action HUD - Systems Without Number",
-  "description": "Token Action HUD support for the Systems Without Number (swnr) game system. Adds a quick-access HUD for weapons, skills, saves, powers, and more.",
+  "id": "token-action-hud-swnr-v14",
+  "title": "Token Action HUD - Systems Without Number v14",
+  "description": "Foundry VTT v14 and Token Action HUD Core 2.1 compatibility fork for the Systems Without Number Redux game system.",
   "authors": [
     {
       "name": "neepster",
       "url": "https://github.com/neepster"
+    },
+    {
+      "name": "jlabruna",
+      "url": "https://github.com/jlabruna"
     }
   ],
-  "url": "https://github.com/neepster/SWN_Token_Action_HUD",
-  "version": "1.0.3",
+  "url": "https://github.com/jlabruna/SWN_Token_Action_HUD",
+  "version": "1.1.0",
   "compatibility": {
-    "minimum": "12",
+    "minimum": "14",
     "verified": "14"
   },
   "esmodules": [
@@ -39,14 +43,14 @@
         "id": "token-action-hud-core",
         "type": "module",
         "compatibility": {
-          "minimum": "2.0"
+          "minimum": "2.1"
         }
       }
     ]
   },
-  "manifest": "https://raw.githubusercontent.com/neepster/SWN_Token_Action_HUD/main/module.json",
-  "download": "https://github.com/neepster/SWN_Token_Action_HUD/releases/latest/download/token-action-hud-swnr.zip",
-  "readme": "https://github.com/neepster/SWN_Token_Action_HUD#readme",
+  "manifest": "https://raw.githubusercontent.com/jlabruna/SWN_Token_Action_HUD/main/module.json",
+  "download": "https://github.com/jlabruna/SWN_Token_Action_HUD/releases/latest/download/token-action-hud-swnr-v14.zip",
+  "readme": "https://github.com/jlabruna/SWN_Token_Action_HUD#readme",
   "socket": false,
   "protected": false,
   "library": false
