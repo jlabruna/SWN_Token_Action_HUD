@@ -1,119 +1,72 @@
-# Token Action HUD — Systems Without Number
+# Token Action HUD — Systems Without Number v14
 
-A [Token Action HUD Core](https://github.com/Larkinabout/fvtt-token-action-hud-core) system module for the [Systems Without Number Redux (swnr)](https://github.com/wintersleepAI/swnr) game system in Foundry VTT.
+An independent [Token Action HUD Core](https://github.com/Larkinabout/fvtt-token-action-hud-core) adapter for the [Systems Without Number Redux (`swnr`)](https://github.com/wintersleepAI/swnr) system in Foundry VTT.
 
-Supports **Stars Without Number**, **Cities Without Number**, **Worlds Without Number**, and **Ashes Without Number** — all variants playable through the `swnr` Foundry system.
-
----
-
-## Features
-
-| Tab | Groups | Contents |
-|-----|--------|----------|
-| Combat | Weapons | All weapon items — click to roll attack |
-| Combat | Saves | Physical / Evasion / Mental / Luck saves |
-| Combat | Attributes | STR / DEX / CON / INT / WIS / CHA checks (2d6 + mod) |
-| Combat | Combat Actions | Initiative, Morale (NPC) |
-| Abilities | Skills | All skill items with rank badge — click to roll |
-| Abilities | Powers | Powers / Psionics |
-| Abilities | Foci | Focus / Feature items (opens sheet) |
-| Equipment | Armor | Armor items (opens sheet) |
-| Equipment | Cyberware | Cyberware items — CWN/AWN (opens sheet) |
-| Utility | Utility | Rest (Night), End Scene, Toggle Token Visibility |
-
----
+It supports native SWNR **character**, **NPC**, **ship**, and **drone** Actors. The module ID is `token-action-hud-swnr-v14`.
 
 ## Requirements
 
-| Dependency | Minimum Version |
-|-----------|----------------|
-| Foundry VTT | 12 |
-| swnr (game system) | any |
-| Token Action HUD Core | 2.0 |
+| Dependency | Supported baseline |
+|---|---|
+| Foundry VTT | 14 |
+| Systems Without Number Redux | 2.3.1 |
+| Token Action HUD Core | 2.1 or newer |
 
----
+## Drone support
+
+Selecting a genuine SWNR `drone` Actor populates useful Token Action HUD actions:
+
+- **Combat → Weapons** lists embedded `weapon` and `shipWeapon` Items, with damage and finite ammunition where SWNR supplies it.
+- Clicking a drone weapon calls that embedded Item's native SWNR `roll()` method—the same roll path used by the drone sheet.
+- Right-clicking a drone weapon (or using Token Action HUD Core's Render Item mode) opens the selected token Actor's embedded Item sheet.
+- **Equipment** can display genuine embedded cargo (`item`), fittings (`shipFitting`), and defences (`shipDefense`). These open their Item sheets; the HUD does not invent activation mechanics for passive records.
+
+The adapter does **not** calculate pilot statistics, Skills, attack bonuses, ammunition, or damage. SWNR owns the underlying data and roll; compatible add-ons, including CWN Combat Enhancements, can supply their own pilot-aware attack resolution without being a dependency of this module.
+
+The Core module refreshes the HUD for controlled Actors after Actor, embedded Item, Active Effect, and token updates. This covers ammunition use, reloads, and the creation, removal, rename, or editing of embedded drone Items.
+
+## Existing actor actions
+
+| Tab | Groups | Available for |
+|---|---|---|
+| Combat | Weapons, saves, attributes, initiative, morale | As supported by each native Actor type |
+| Abilities | Skills, powers, foci | Characters |
+| Equipment | Armor, cyberware, cargo, fittings, defences | Where matching embedded Items exist |
+| Utility | Rest, End Scene, token visibility | Characters and NPCs |
 
 ## Installation
 
-### Method 1 — Manifest URL (recommended once published)
+1. In Foundry, go to **Setup → Add-on Modules → Install Module**.
+2. Paste this manifest URL:
 
-1. Open Foundry VTT → **Setup → Add-on Modules → Install Module**
-2. Paste the manifest URL into the **Manifest URL** field:
+   ```text
+   https://raw.githubusercontent.com/jlabruna/SWN_Token_Action_HUD/main/module.json
    ```
-   https://raw.githubusercontent.com/neepster/SWN_Token_Action_HUD/main/module.json
-   ```
-3. Click **Install**
 
-### Method 2 — Manual
+3. Install it, enable **Token Action HUD Core** and this module in the world, then select an SWNR token.
 
-1. Download or clone this repository.
-2. Copy the `token-action-hud-swnr/` folder into your Foundry `Data/modules/` directory so the path is:
-   ```
-   Data/modules/token-action-hud-swnr/module.json
-   ```
-3. Restart Foundry and enable the module in your world's **Module Management** screen.
+## Usage notes
 
----
+- Left-click a weapon to use SWNR's normal weapon roll dialog.
+- Right-click an Item action, or enable **Render Item** in Token Action HUD Core, to open the selected Actor's embedded Item sheet.
+- The adapter uses the selected token's effective Actor, so linked and unlinked/synthetic tokens resolve their own embedded Items.
+- The module respects ordinary Foundry ownership and does not provide a way around system or item permissions.
 
-## Usage
+## Known limitations
 
-1. Enable **Token Action HUD Core** and **Token Action HUD — SWNR** in Module Management.
-2. Select (left-click) any token whose actor is type `character`, `npc`, or `ship`.
-3. The HUD appears near the token. Click any action button to trigger the roll or open the item sheet.
+- Drone cargo, fittings, and defences are exposed only as Item-sheet actions because SWNR treats them as passive records; no dead activation buttons are created.
+- The HUD does not add drone-specific save, attribute, morale, rest, or pilot actions when SWNR does not provide equivalent native functionality.
+- The adapter does not require CWN Content Pack, CWN Combat Enhancements, or CWN Interface Theme.
 
-### Tips
+## Development checks
 
-- **Left-click** a weapon, skill, or power: rolls normally.
-- **Shift-click** a skill: triggers the secondary/opposed roll mode (passes `shiftKey = true` to the skill item).
-- **Left-click** a save: opens the SWNR save dialog (modifier prompt).
-- **Left-click** an attribute: rolls `2d6 + modifier` and posts to chat.
-- **Right-click** any item action (or enable *Render Item* in TAH Core settings): opens the item sheet instead.
-- **Initiative**: adds token to combat and rolls initiative if a combat encounter is active.
-- **Morale** (NPC only): triggers the NPC morale roll dialog.
-- **Rest (Night)** / **End Scene**: delegates to `globalThis.swnr.utils.refreshActor` to heal and recover resources.
+Run the following from the repository root when Node.js is available:
 
----
-
-## Known Limitations
-
-- **Attribute checks** use a simple `2d6 + mod` formula. SWN doesn't have a canonical standalone attribute-check mechanic; the GM decides how to interpret the result.
-- **Powers**: rolled via `item.roll()`. If the SWNR system changes how powers activate, this may need updating.
-- **Cyberware / Armor / Foci**: clicking opens the item sheet rather than triggering a roll, since these items don't have roll actions in the base system.
-- **Ship actors**: only weapon rolls and initiative are supported. Full ship combat (bridge roles, weapons fire) is outside scope for v1.0.
-- The `luck` save is displayed only if the actor actually has a `system.save.luck` value. Older SWN-only actors may not include it.
-
----
-
-## Development
-
+```text
+npm run check
+npm test
 ```
-token-action-hud-swnr/
-├── module.json
-├── scripts/
-│   ├── init.js            — entry point; fires tokenActionHudSystemReady
-│   ├── constants.js       — MODULE, GROUP, ACTION_TYPE, ITEM_TYPE, ATTRIBUTES, SAVES
-│   ├── defaults.js        — DEFAULTS layout object
-│   ├── system-manager.js  — SystemManager class
-│   ├── action-handler.js  — ActionHandler class (HUD population)
-│   └── roll-handler.js    — RollHandler class (click handling)
-├── styles/
-│   └── token-action-hud-swnr.css
-└── lang/
-    └── en.json
-```
-
-All classes are defined as `null` at module scope and assigned inside `Hooks.once('tokenActionHudCoreApiReady', ...)` so they extend the live TAH Core API classes at runtime.
-
----
 
 ## License
 
-MIT — see [LICENSE](LICENSE) file.
-
----
-
-## Credits
-
-- **TAH Core** by [Larkinabout](https://github.com/Larkinabout)
-- **swnr system** by [wintersleepAI](https://github.com/wintersleepAI)
-- This module by [neepster](https://github.com/neepster)
+MIT — see [LICENSE](LICENSE).

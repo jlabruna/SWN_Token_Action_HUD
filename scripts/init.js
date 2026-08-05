@@ -4,9 +4,9 @@
  * All class definitions live inside the 'tokenActionHudCoreApiReady' hook
  * so that they can extend the live TAH Core API classes.
  *
- * This file uses Hooks.on (not once) because system-manager.js has its own
- * Hooks.once listener that runs first and populates SystemManager; this
- * handler fires after that and registers the module with TAH Core.
+ * This listener runs once per Foundry lifecycle after the imported modules
+ * have registered their Core-ready listeners. Using `once` prevents duplicate
+ * system registration during refreshes or hot reloads.
  */
 
 import { SystemManager } from './system-manager.js'
@@ -19,7 +19,7 @@ import './action-handler.js'
 import './roll-handler.js'
 import './defaults.js'
 
-Hooks.on('tokenActionHudCoreApiReady', async () => {
+Hooks.once('tokenActionHudCoreApiReady', async () => {
     const module = game.modules.get(MODULE.ID)
     module.api = {
         requiredCoreModuleVersion: REQUIRED_CORE_MODULE_VERSION,

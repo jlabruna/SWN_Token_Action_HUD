@@ -6,7 +6,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
      */
     RollHandler = class RollHandler extends coreModule.api.RollHandler {
         // Known actor types this handler supports
-        static #KNOWN_ACTOR_TYPES = ['character', 'npc', 'ship']
+        static #KNOWN_ACTOR_TYPES = ['character', 'npc', 'ship', 'drone']
 
         /**
          * Handle action click (left or right click)
@@ -19,9 +19,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
             // If right-click or render mode is active, open the item sheet instead
             if (this.isRenderItem()) {
-                const itemTypes = ['weapon', 'skill', 'power', 'armor', 'cyberware', 'feature']
-                if (itemTypes.includes(actionType)) {
-                    return this.doRenderItem(this.actor, actionId)
+                const itemTypes = ['weapon', 'skill', 'power', 'armor', 'cyberware', 'feature', 'cargo', 'fitting', 'defence']
+              if (this.actor && itemTypes.includes(actionType)) {
+                    return this.renderItem(this.actor, actionId)
                 }
             }
 
@@ -71,6 +71,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 case 'armor':
                 case 'cyberware':
                 case 'feature':
+                case 'cargo':
+                case 'fitting':
+                case 'defence':
                     await this.#openItemSheet(actor, actionId)
                     break
                 case 'save':
@@ -106,7 +109,11 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          */
         async #rollItem (actor, itemId) {
             const item = actor.items.get(itemId)
-            if (!item) return
+            if (!item) {
+                ui.notifications?.warn('Token Action HUD SWNR: The selected item is no longer available.')
+                Hooks.callAll('forceUpdateTokenActionHud')
+                return
+            }
 
             if (typeof item.roll === 'function') {
                 await item.roll()
@@ -139,7 +146,12 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          */
         async #openItemSheet (actor, itemId) {
             const item = actor.items.get(itemId)
-            item?.sheet?.render(true)
+            if (!item) {
+                ui.notifications?.warn('Token Action HUD SWNR: The selected item is no longer available.')
+                Hooks.callAll('forceUpdateTokenActionHud')
+                return
+            }
+            item.sheet?.render(true)
         }
 
         // ---------------------------------------------------------------

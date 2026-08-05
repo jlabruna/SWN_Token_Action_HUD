@@ -49,7 +49,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 name: coreModule.api.Utils.i18n('tokenActionHud.swnr.tab.inventory'),
                 groups: [
                     { ...groups.ARMOR,     nestId: 'inventory_armor'     },
-                    { ...groups.CYBERWARE, nestId: 'inventory_cyberware' }
+                    { ...groups.CYBERWARE, nestId: 'inventory_cyberware' },
+                    { ...groups.CARGO,     nestId: 'inventory_cargo'     },
+                    { ...groups.FITTINGS,  nestId: 'inventory_fittings'  },
+                    { ...groups.DEFENCES,  nestId: 'inventory_defences'  }
                 ]
             },
             // Tab 4: Utility

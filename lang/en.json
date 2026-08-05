@@ -13,6 +13,9 @@
                 "armor":         "Armor",
                 "cyberware":     "Cyberware",
                 "foci":          "Foci",
+                "cargo":         "Cargo",
+                "fittings":      "Fittings",
+                "defences":      "Defences",
                 "saves":         "Saves",
                 "attributes":    "Attributes",
                 "combatActions": "Combat Actions"
@@ -24,6 +27,9 @@
                 "armor":      "Armor",
                 "cyberware":  "Cyberware",
                 "feature":    "Focus",
+                "cargo":      "Cargo",
+                "fitting":    "Fitting",
+                "defence":   "Defence",
                 "save":       "Save",
                 "attribute":  "Attribute",
                 "initiative": "Initiative",
@@ -39,6 +45,7 @@
             },
             "info": {
                 "damage": "Damage",
+                "ammo":   "Ammo",
                 "hit":    "Hit",
                 "rank":   "Rank",
                 "strain": "Strain",
