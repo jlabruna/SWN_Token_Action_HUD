@@ -2,7 +2,10 @@ name: Release
 
 on:
   release:
-    types: [created]
+    # GitHub does not dispatch the "created" event for a draft when it is
+    # later published. Publishing is the point at which release assets must
+    # be built and attached.
+    types: [published]
 
 jobs:
   release:
