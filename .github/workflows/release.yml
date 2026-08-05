@@ -15,18 +15,19 @@ jobs:
 
       - name: Create zip
         run: |
-          zip -r token-action-hud-swnr.zip \
+          zip -r token-action-hud-swnr-v14.zip \
             module.json \
             scripts/ \
             styles/ \
             lang/ \
             README.md \
+            CHANGELOG.md \
             LICENSE
 
       - name: Upload release assets
         run: |
           gh release upload ${{ github.event.release.tag_name }} \
             module.json \
-            token-action-hud-swnr.zip
+            token-action-hud-swnr-v14.zip
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
