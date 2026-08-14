@@ -2,7 +2,7 @@
 
 An independent [Token Action HUD Core](https://github.com/Larkinabout/fvtt-token-action-hud-core) adapter for the [Systems Without Number Redux (`swnr`)](https://github.com/wintersleepAI/swnr) system in Foundry VTT.
 
-It supports native SWNR **character**, **NPC**, **ship**, and **drone** Actors. The module ID is `token-action-hud-swnr-v14`.
+It supports native SWNR **character**, **NPC**, **ship**, **drone**, and **vehicle** Actors. The module ID is `token-action-hud-swnr-v14`.
 
 ## Requirements
 
@@ -12,18 +12,18 @@ It supports native SWNR **character**, **NPC**, **ship**, and **drone** Actors. 
 | Systems Without Number Redux | 2.3.1 |
 | Token Action HUD Core | 2.1 or newer |
 
-## Drone support
+## Drone and vehicle support
 
-Selecting a genuine SWNR `drone` Actor populates useful Token Action HUD actions:
+Selecting a genuine SWNR `drone` or `vehicle` Actor populates useful Token Action HUD actions:
 
 - **Combat → Weapons** lists embedded `weapon` and `shipWeapon` Items, with damage and finite ammunition where SWNR supplies it.
-- Clicking a drone weapon calls that embedded Item's native SWNR `roll()` method—the same roll path used by the drone sheet.
-- Right-clicking a drone weapon (or using Token Action HUD Core's Render Item mode) opens the selected token Actor's embedded Item sheet.
+- Clicking a mounted weapon calls that embedded Item's native SWNR `roll()` method—the same roll path used by the Actor sheet.
+- Right-clicking a mounted weapon (or using Token Action HUD Core's Render Item mode) opens the selected token Actor's embedded Item sheet.
 - **Equipment** can display genuine embedded cargo (`item`), fittings (`shipFitting`), and defences (`shipDefense`). These open their Item sheets; the HUD does not invent activation mechanics for passive records.
 
 The adapter does **not** calculate pilot statistics, Skills, attack bonuses, ammunition, or damage. SWNR owns the underlying data and roll; compatible add-ons, including CWN Combat Enhancements, can supply their own pilot-aware attack resolution without being a dependency of this module.
 
-The Core module refreshes the HUD for controlled Actors after Actor, embedded Item, Active Effect, and token updates. This covers ammunition use, reloads, and the creation, removal, rename, or editing of embedded drone Items.
+The Core module refreshes the HUD for controlled Actors after Actor, embedded Item, Active Effect, and token updates. This covers ammunition use, reloads, and the creation, removal, rename, or editing of embedded drone and vehicle Items.
 
 ## Existing actor actions
 
@@ -54,8 +54,8 @@ The Core module refreshes the HUD for controlled Actors after Actor, embedded It
 
 ## Known limitations
 
-- Drone cargo, fittings, and defences are exposed only as Item-sheet actions because SWNR treats them as passive records; no dead activation buttons are created.
-- The HUD does not add drone-specific save, attribute, morale, rest, or pilot actions when SWNR does not provide equivalent native functionality.
+- Drone and vehicle cargo, fittings, and defences are exposed only as Item-sheet actions because SWNR treats them as passive records; no dead activation buttons are created.
+- The HUD does not add platform-specific save, attribute, morale, rest, or pilot actions when SWNR does not provide equivalent native functionality.
 - The adapter does not require CWN Content Pack, CWN Combat Enhancements, or CWN Interface Theme.
 
 ## Development checks

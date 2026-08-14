@@ -1,3 +1,5 @@
+import { openNativeEmbeddedItem, rollNativeEmbeddedWeapon } from './drone-support.js'
+
 export let RollHandler = null
 
 Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
@@ -6,7 +8,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
      */
     RollHandler = class RollHandler extends coreModule.api.RollHandler {
         // Known actor types this handler supports
-        static #KNOWN_ACTOR_TYPES = ['character', 'npc', 'ship', 'drone']
+        static #KNOWN_ACTOR_TYPES = ['character', 'npc', 'ship', 'drone', 'vehicle']
 
         /**
          * Handle action click (left or right click)
@@ -20,7 +22,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             // If right-click or render mode is active, open the item sheet instead
             if (this.isRenderItem()) {
                 const itemTypes = ['weapon', 'skill', 'power', 'armor', 'cyberware', 'feature', 'cargo', 'fitting', 'defence']
-              if (this.actor && itemTypes.includes(actionType)) {
+                if (this.actor && itemTypes.includes(actionType)) {
                     return this.renderItem(this.actor, actionId)
                 }
             }
@@ -115,13 +117,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 return
             }
 
-            if (typeof item.roll === 'function') {
-                await item.roll()
-            } else if (typeof item.system?.roll === 'function') {
-                await item.system.roll()
-            } else {
-                item.sheet?.render(true)
-            }
+            return rollNativeEmbeddedWeapon(item)
         }
 
         /**
@@ -151,7 +147,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 Hooks.callAll('forceUpdateTokenActionHud')
                 return
             }
-            item.sheet?.render(true)
+            return openNativeEmbeddedItem(item)
         }
 
         // ---------------------------------------------------------------

@@ -5,9 +5,9 @@ import {
     SAVES
 } from './constants.js'
 import {
-    createDroneItemAction,
-    createDroneWeaponAction,
-    getDroneItems
+    createPlatformItemAction,
+    createPlatformWeaponAction,
+    getPlatformItems
 } from './drone-support.js'
 
 export let ActionHandler = null
@@ -44,8 +44,8 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 await this.#buildNpcActions()
             } else if (this.actorType === 'ship') {
                 await this.#buildShipActions()
-            } else if (this.actorType === 'drone') {
-                await this.#buildDroneActions()
+            } else if (this.actorType === 'drone' || this.actorType === 'vehicle') {
+                await this.#buildPlatformActions()
             } else if (!this.actor) {
                 // Multiple tokens selected — build a limited multi-token set
                 await this.#buildMultiTokenActions()
@@ -88,23 +88,23 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         }
 
         /**
-         * SWNR drones use the vehicle sheet's native embedded Item model.
+         * SWNR drones and vehicles use the vehicle sheet's native embedded Item model.
          * Weapon action values intentionally use the ordinary `weapon` route;
          * RollHandler then calls the current embedded Item's native `roll()`.
          */
-        async #buildDroneActions () {
+        async #buildPlatformActions () {
             await Promise.all([
-                this.#buildDroneWeaponActions(),
-                this.#buildDroneItemGroup('cargo', 'cargo', 'cargo'),
-                this.#buildDroneItemGroup('fittings', 'fittings', 'fitting'),
-                this.#buildDroneItemGroup('defences', 'defences', 'defence'),
+                this.#buildPlatformWeaponActions(),
+                this.#buildPlatformItemGroup('cargo', 'cargo', 'cargo'),
+                this.#buildPlatformItemGroup('fittings', 'fittings', 'fitting'),
+                this.#buildPlatformItemGroup('defences', 'defences', 'defence'),
                 this.#buildCombatActions({ includeInitiative: true })
             ])
         }
 
-        async #buildDroneWeaponActions () {
-            const actions = getDroneItems(this.actor, 'weapons').map(([itemId, item]) => (
-                createDroneWeaponAction({
+        async #buildPlatformWeaponActions () {
+            const actions = getPlatformItems(this.actor, 'weapons').map(([itemId, item]) => (
+                createPlatformWeaponAction({
                     itemId,
                     item,
                     delimiter: this.delimiter,
@@ -115,9 +115,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             this.addActions(actions, { id: 'weapons', type: 'system' })
         }
 
-        async #buildDroneItemGroup (groupId, category, actionType) {
-            const actions = getDroneItems(this.actor, category).map(([itemId, item]) => (
-                createDroneItemAction({
+        async #buildPlatformItemGroup (groupId, category, actionType) {
+            const actions = getPlatformItems(this.actor, category).map(([itemId, item]) => (
+                createPlatformItemAction({
                     itemId,
                     item,
                     actionType,

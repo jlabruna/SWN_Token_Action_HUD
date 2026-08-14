@@ -4,8 +4,11 @@ import test from 'node:test'
 import {
     createDroneWeaponAction,
     getDroneItems,
+    getPlatformItems,
     getWeaponAmmoText,
-    isSupportedActorType
+    isSupportedActorType,
+    openNativeEmbeddedItem,
+    rollNativeEmbeddedWeapon
 } from '../scripts/drone-support.js'
 
 const i18n = key => ({
@@ -23,11 +26,11 @@ const weapon = (id, name, { type = 'weapon', damage = '1d8', ammo } = {}) => ({
     system: { damage, ...(ammo && { ammo }) }
 })
 
-test('only native drone actor type is routed as a drone-capable actor', () => {
+test('native drone and vehicle actor types are routed as platform-capable actors', () => {
     assert.equal(isSupportedActorType('drone'), true)
+    assert.equal(isSupportedActorType('vehicle'), true)
     assert.equal(isSupportedActorType('character'), true)
     assert.equal(isSupportedActorType('npc'), true)
-    assert.equal(isSupportedActorType('vehicle'), false)
     assert.equal(isSupportedActorType('drone-by-name'), false)
 })
 
@@ -81,4 +84,40 @@ test('cargo, fittings, and defences are independently discovered from embedded i
     assert.deepEqual(getDroneItems(actor, 'cargo').map(([id]) => id), ['cargo'])
     assert.deepEqual(getDroneItems(actor, 'fittings').map(([id]) => id), ['fit'])
     assert.deepEqual(getDroneItems(actor, 'defences').map(([id]) => id), ['def'])
+})
+
+test('vehicle embedded items are grouped using the same native platform item types', () => {
+    const actor = {
+        type: 'vehicle',
+        items: [
+            weapon('vehicle-weapon', 'Mounted Gun'),
+            weapon('vehicle-ship-weapon', 'Heavy Mount', { type: 'shipWeapon' }),
+            { id: 'cargo', name: 'Vehicle Cargo', type: 'item', system: {} },
+            { id: 'fit', name: 'Vehicle Fitting', type: 'shipFitting', system: {} },
+            { id: 'def', name: 'Vehicle Defence', type: 'shipDefense', system: {} }
+        ]
+    }
+
+    assert.deepEqual(getPlatformItems(actor, 'weapons').map(([id]) => id), ['vehicle-ship-weapon', 'vehicle-weapon'])
+    assert.deepEqual(getPlatformItems(actor, 'cargo').map(([id]) => id), ['cargo'])
+    assert.deepEqual(getPlatformItems(actor, 'fittings').map(([id]) => id), ['fit'])
+    assert.deepEqual(getPlatformItems(actor, 'defences').map(([id]) => id), ['def'])
+})
+
+test('vehicle weapon actions use the embedded item native roll path', async () => {
+    let rolled = 0
+    const item = { roll: async () => { rolled += 1 } }
+
+    await rollNativeEmbeddedWeapon(item)
+
+    assert.equal(rolled, 1)
+})
+
+test('passive vehicle actions open the embedded item sheet', () => {
+    let rendered = 0
+    const item = { sheet: { render: force => { if (force) rendered += 1 } } }
+
+    openNativeEmbeddedItem(item)
+
+    assert.equal(rendered, 1)
 })

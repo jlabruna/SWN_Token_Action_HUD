@@ -1,7 +1,7 @@
 {
   "id": "token-action-hud-swnr-v14",
   "title": "Token Action HUD - Systems Without Number v14",
-  "description": "Foundry VTT v14 Token Action HUD adapter for Systems Without Number Redux characters, NPCs, ships, and drones.",
+  "description": "Foundry VTT v14 Token Action HUD adapter for Systems Without Number Redux characters, NPCs, ships, drones, and vehicles.",
   "authors": [
     {
       "name": "neepster",
@@ -13,7 +13,7 @@
     }
   ],
   "url": "https://github.com/jlabruna/SWN_Token_Action_HUD",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "compatibility": {
     "minimum": "14",
     "verified": "14"

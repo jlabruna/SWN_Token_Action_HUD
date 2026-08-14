@@ -1,14 +1,14 @@
 /**
- * Pure helpers for SWNR drone actors.
+ * Pure helpers for SWNR drone and vehicle actors.
  *
  * Keeping discovery and display-data preparation here makes the adapter easy
  * to test without Foundry, while the action and roll handlers remain the only
  * places that call Token Action HUD Core or SWNR APIs.
  */
 
-export const SUPPORTED_ACTOR_TYPES = new Set(['character', 'npc', 'ship', 'drone'])
+export const SUPPORTED_ACTOR_TYPES = new Set(['character', 'npc', 'ship', 'drone', 'vehicle'])
 
-const DRONE_ITEM_TYPES = {
+const PLATFORM_ITEM_TYPES = {
     weapons: new Set(['weapon', 'shipWeapon']),
     cargo: new Set(['item']),
     fittings: new Set(['shipFitting']),
@@ -43,10 +43,14 @@ export function getActorItemEntries (actor) {
     })
 }
 
-export function getDroneItems (actor, category) {
-    const itemTypes = DRONE_ITEM_TYPES[category]
+export function getPlatformItems (actor, category) {
+    const itemTypes = PLATFORM_ITEM_TYPES[category]
     if (!itemTypes) return []
     return getActorItemEntries(actor).filter(([, item]) => itemTypes.has(item?.type))
+}
+
+export function getDroneItems (actor, category) {
+    return getPlatformItems(actor, category)
 }
 
 export function getWeaponAmmoText (item) {
@@ -64,7 +68,7 @@ export function getWeaponAmmoText (item) {
  * The encoded value deliberately remains the normal `weapon|itemId` route so
  * RollHandler can invoke the embedded SWNR Item's native roll method.
  */
-export function createDroneWeaponAction ({ itemId, item, delimiter, i18n, getImage }) {
+export function createPlatformWeaponAction ({ itemId, item, delimiter, i18n, getImage }) {
     const damage = item?.system?.damage ?? item?.system?.dmg ?? ''
     const ammo = getWeaponAmmoText(item)
     const attackBonus = item?.system?.hit ?? item?.system?.attackBonus ?? item?.system?.ab
@@ -96,7 +100,11 @@ export function createDroneWeaponAction ({ itemId, item, delimiter, i18n, getIma
     return action
 }
 
-export function createDroneItemAction ({ itemId, item, actionType, delimiter, i18n, getImage }) {
+export function createDroneWeaponAction (options) {
+    return createPlatformWeaponAction(options)
+}
+
+export function createPlatformItemAction ({ itemId, item, actionType, delimiter, i18n, getImage }) {
     const actionTypeKey = `tokenActionHud.swnr.actionType.${actionType}`
     const label = i18n(actionTypeKey)
     return {
@@ -107,4 +115,18 @@ export function createDroneItemAction ({ itemId, item, actionType, delimiter, i1
         img: getImage(item),
         tooltip: item?.system?.description ?? ''
     }
+}
+
+export function createDroneItemAction (options) {
+    return createPlatformItemAction(options)
+}
+
+export async function rollNativeEmbeddedWeapon (item) {
+    if (typeof item?.roll === 'function') return item.roll()
+    if (typeof item?.system?.roll === 'function') return item.system.roll()
+    return item?.sheet?.render(true)
+}
+
+export function openNativeEmbeddedItem (item) {
+    return item?.sheet?.render(true)
 }
