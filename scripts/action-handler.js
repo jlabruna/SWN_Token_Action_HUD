@@ -9,6 +9,10 @@ import {
     createPlatformWeaponAction,
     getPlatformItems
 } from './drone-support.js'
+import {
+    createCombatEnhancementHudAction,
+    getAvailableCombatEnhancementActions
+} from './combat-enhancements-actions.js'
 
 export let ActionHandler = null
 
@@ -64,6 +68,8 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 this.#buildItemGroup('armor',     'armor',    'armor'),
                 this.#buildItemGroup('cyberware', 'cyberware','cyberware'),
                 this.#buildItemGroup('foci',      'feature',  'feature'),
+                this.#buildCombatEnhancementActions('focus', 'ceFocusActions'),
+                this.#buildCombatEnhancementActions('edge', 'ceEdgeActions'),
                 this.#buildSaves(),
                 this.#buildAttributes(),
                 this.#buildCombatActions({ includeInitiative: true }),
@@ -85,6 +91,26 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 this.#buildItemGroup('weapons', 'weapon', 'weapon'),
                 this.#buildCombatActions({ includeInitiative: true })
             ])
+        }
+
+        // ---------------------------------------------------------------
+        // Optional CWN Combat Enhancements executable Focus/Edge actions
+        // ---------------------------------------------------------------
+
+        async #buildCombatEnhancementActions (kind, groupId) {
+            const descriptors = getAvailableCombatEnhancementActions(this.actor, kind)
+            if (descriptors.length === 0) return
+
+            const actions = descriptors
+                .map(descriptor => createCombatEnhancementHudAction({
+                    descriptor,
+                    kind,
+                    delimiter: this.delimiter,
+                    i18n: key => coreModule.api.Utils.i18n(key)
+                }))
+                .filter(Boolean)
+
+            if (actions.length > 0) this.addActions(actions, { id: groupId, type: 'system' })
         }
 
         /**

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0
+
+- Added discoverable `CE Focus Actions` and `CE Edge Actions` system groups for Token Action HUD Core custom layouts.
+- Built the groups dynamically from CWN Combat Enhancements' public `focus.availableActions(actor)` and `edge.availableActions(actor)` APIs.
+- Dispatched HUD clicks through Combat Enhancements' public `focus.useAction(actor, key)` and `edge.useAction(actor, key)` APIs so CE remains authoritative for mechanics and usage state.
+- Hid passive, exhausted, setup, undo, management, and reset entries from the quick-launch groups.
+- Preserved the existing Foci document group and all native SWNR item and weapon routes.
+- Kept Combat Enhancements optional and returned empty groups safely for unsupported actors or unavailable APIs.
+- Added release validation that requires the published `v*` tag to match `module.json`.
+
 ## 1.2.1
 
 - Added native SWNR `vehicle` Actor support.

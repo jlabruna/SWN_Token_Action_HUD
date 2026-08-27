@@ -1,4 +1,5 @@
 import { openNativeEmbeddedItem, rollNativeEmbeddedWeapon } from './drone-support.js'
+import { dispatchCombatEnhancementAction } from './combat-enhancements-actions.js'
 
 export let RollHandler = null
 
@@ -93,6 +94,12 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 case 'utility':
                     await this.#handleUtility(actor, token, actionId)
                     break
+                case 'ceFocusAction':
+                    await this.#useCombatEnhancementAction(actor, 'focus', actionId)
+                    break
+                case 'ceEdgeAction':
+                    await this.#useCombatEnhancementAction(actor, 'edge', actionId)
+                    break
                 default:
                     console.warn(`token-action-hud-swnr | Unknown action type: ${actionType}`)
                 }
@@ -100,6 +107,14 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 console.error(`token-action-hud-swnr | Error handling action [${actionType}|${actionId}]:`, err)
                 ui.notifications?.warn(`Token Action HUD SWNR: Action failed — see console for details.`)
             }
+        }
+
+        async #useCombatEnhancementAction (actor, kind, actionId) {
+            const outcome = await dispatchCombatEnhancementAction(actor, kind, actionId)
+            if (!outcome.dispatched) {
+                ui.notifications?.warn('Token Action HUD SWNR: CWN Combat Enhancements is not available for this action.')
+            }
+            Hooks.callAll('forceUpdateTokenActionHud')
         }
 
         // ---------------------------------------------------------------

@@ -13,6 +13,8 @@
                 "armor":         "Armor",
                 "cyberware":     "Cyberware",
                 "foci":          "Foci",
+                "ceFocusActions": "CE Focus Actions",
+                "ceEdgeActions":  "CE Edge Actions",
                 "cargo":         "Cargo",
                 "fittings":      "Fittings",
                 "defences":      "Defences",
@@ -27,6 +29,8 @@
                 "armor":      "Armor",
                 "cyberware":  "Cyberware",
                 "feature":    "Focus",
+                "ceFocusAction": "CE Focus Action",
+                "ceEdgeAction":  "CE Edge Action",
                 "cargo":      "Cargo",
                 "fitting":    "Fitting",
                 "defence":   "Defence",
@@ -51,7 +55,15 @@
                 "strain": "Strain",
                 "target": "Target",
                 "mod":    "Modifier",
-                "score":  "Score"
+                "score":   "Score",
+                "cadence": "Cadence"
+            },
+            "cadence": {
+                "round":   "Once per round",
+                "scene":   "Once per scene",
+                "day":     "Once per day",
+                "week":    "Once per week",
+                "session": "Once per game session"
             }
         }
     }

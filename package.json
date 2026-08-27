@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check scripts/action-handler.js && node --check scripts/roll-handler.js && node --check scripts/drone-support.js",
-    "test": "node --test tests/drone-support.test.mjs"
+    "check": "node --check scripts/action-handler.js && node --check scripts/roll-handler.js && node --check scripts/drone-support.js && node --check scripts/combat-enhancements-actions.js",
+    "test": "node --test tests/drone-support.test.mjs tests/combat-enhancements-actions.test.mjs"
   }
 }

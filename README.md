@@ -12,6 +12,21 @@ It supports native SWNR **character**, **NPC**, **ship**, **drone**, and **vehic
 | Systems Without Number Redux | 2.3.1 |
 | Token Action HUD Core | 2.1 or newer |
 
+The currently verified Token Action HUD Core reference version is 2.1.0.
+
+## Optional CWN Combat Enhancements actions
+
+When [CWN Combat Enhancements](https://github.com/jlabruna/CWN-combat-enhancements) is enabled, two additional reusable system groups are available through Token Action HUD Core's normal **Unlock HUD → Add Subgroup → Search Group** interface:
+
+- **Group: CE Focus Actions**
+- **Group: CE Edge Actions**
+
+These groups contain only currently actionable abilities reported by Combat Enhancements. They do not replace the existing **Foci** document group and do not reproduce Action Centre setup, used actions, undo, usage management, or resets.
+
+HUD clicks dispatch through Combat Enhancements' public action API. Combat Enhancements remains authoritative for eligibility, cadence tracking, rerolls, execution, chat output, and consumed state. The groups can be placed beneath any Core top-level group, removed, reordered, and added again without rebuilding an exported layout.
+
+Combat Enhancements remains optional. If it is disabled, unavailable, or the selected Actor is unsupported, these groups simply contain no actions and the ordinary SWNR HUD continues working.
+
 ## Drone and vehicle support
 
 Selecting a genuine SWNR `drone` or `vehicle` Actor populates useful Token Action HUD actions:
@@ -33,6 +48,7 @@ The Core module refreshes the HUD for controlled Actors after Actor, embedded It
 | Abilities | Skills, powers, foci | Characters |
 | Equipment | Armor, cyberware, cargo, fittings, defences | Where matching embedded Items exist |
 | Utility | Rest, End Scene, token visibility | Characters and NPCs |
+| Custom layout | CE Focus Actions, CE Edge Actions | Characters when Combat Enhancements reports ready actions |
 
 ## Installation
 
@@ -56,7 +72,7 @@ The Core module refreshes the HUD for controlled Actors after Actor, embedded It
 
 - Drone and vehicle cargo, fittings, and defences are exposed only as Item-sheet actions because SWNR treats them as passive records; no dead activation buttons are created.
 - The HUD does not add platform-specific save, attribute, morale, rest, or pilot actions when SWNR does not provide equivalent native functionality.
-- The adapter does not require CWN Content Pack, CWN Combat Enhancements, or CWN Interface Theme.
+- The adapter does not require CWN Content Pack, CWN Combat Enhancements, or CWN Interface Theme. Combat Enhancements only enables the two optional CE action groups.
 
 ## Development checks
 
