@@ -16,6 +16,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate and test
+        run: |
+          npm run check
+          npm test
+
+      - name: Verify tag and manifest versions
+        run: test "${{ github.event.release.tag_name }}" = "v$(node -p "require('./module.json').version")"
+
       - name: Create zip
         run: |
           zip -r token-action-hud-swnr-v14.zip \
